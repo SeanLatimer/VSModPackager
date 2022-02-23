@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Project>
+  <PropertyGroup>
+    <PackagerTargetFile>$(ProjectDir)VSModPackager.targets</PackagerTargetFile>
+  </PropertyGroup>
+
+  <Import Project="$(PackagerTargetFile)" Condition="Exists('$(PackagerTargetFile)')"/>
+  <Target Name="VSModPackager"
+          AfterTargets="Build"
+          Condition="'$(Configuration)' == 'Release' and !Exists('$(PackagerTargetFile)')">
+    <VSModPackager ProjectDir="$(ProjectDir)"
+                   OutputPath="$(OutputPath)"
+                   AssemblyName="$(AssemblyName)"
+                   MakeZip="true"/>
+  </Target>
+</Project>
