@@ -13,8 +13,8 @@ on:
       - '.github/ISSUE_TEMPLATE/**'
       - '.github/pull_request_template.md'
 jobs:
-  build:
-    name: 'Build'
+  build-publish:
+    name: 'Build & Publish'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,9 +24,14 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 5.0.x
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
+        
+      - name: Setup NuGet
+        run: |
+          dotnet nuget update source github --store-password-in-clear-text --username SeanLatimer --password ${{ secrets.GITHUB_TOKEN }}
+          dotnet nuget enable source github
 
       - name: Setup Verlite
         run: |
@@ -48,28 +53,6 @@ jobs:
           name: artifacts
           path: |
             artifacts/*
-  publish:
-    name: 'Publish'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: '0'
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-
-      - name: Setup NuGet
-        run: |
-          dotnet nuget update source github --store-password-in-clear-text --username SeanLatimer --password ${{ secrets.GITHUB_TOKEN }}
-          dotnet nuget enable source github
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-
       - name: Publish Nuget GitHub
         run: dotnet nuget push 'artifacts/*.nupkg' -k ${GITHUB_TOKEN} -s github --skip-duplicate
           --no-symbols 1
