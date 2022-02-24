@@ -32,13 +32,6 @@ jobs:
 
       - name: Pack
         run: dotnet pack -o artifacts --configuration Release --no-restore
-
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: artifacts
-          path: |
-            artifacts/*
  
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -52,3 +45,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUGETORG_TOKEN: ${{ secrets.NUGETORG_TOKEN }}
+          
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: |
+            artifacts/*
