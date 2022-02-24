@@ -43,7 +43,7 @@ jobs:
         run: dotnet pack -o artifacts --configuration Release --no-restore
             
       - name: Publish Nuget GitHub
-        run: dotnet nuget push 'artifacts/*.nupkg' -s https://nuget.pkg.github.com/SeanLatimer/index.json -k ${GITHUB_TOKEN} --skip-duplicate --no-symbols
+        run: dotnet nuget push "artifacts\*.nupkg" -s https://nuget.pkg.github.com/SeanLatimer/index.json -k ${GITHUB_TOKEN} --skip-duplicate --no-symbols
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
