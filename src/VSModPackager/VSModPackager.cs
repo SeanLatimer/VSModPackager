@@ -16,11 +16,10 @@ using Newtonsoft.Json;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-// ReSharper disable once InconsistentNaming
 /// <summary>
 ///     Main Task Class
 /// </summary>
-public class VSModPackager : Task
+public class VsModPackager : Task
 {
     /// <summary>
     ///     Set this to $(AssemblyName)
