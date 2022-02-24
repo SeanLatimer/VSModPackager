@@ -18,11 +18,6 @@ jobs:
           dotnet-version: 6.0.x
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1
-        
-      - name: Setup NuGet
-        run: |
-          dotnet nuget update source github --store-password-in-clear-text --username SeanLatimer --password ${{ secrets.GITHUB_TOKEN }}
-          dotnet nuget enable source github
 
 #      - name: Setup Verlite
 #        run: |
@@ -53,7 +48,7 @@ jobs:
       - name: Publish Nuget
         run: |
           dotnet nuget push 'artifacts/*.nupkg' -k ${NUGETORG_TOKEN} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
-          dotnet nuget push 'artifacts/*.nupkg' -k ${GITHUB_TOKEN} -s github --skip-duplicate --no-symbols
+          dotnet nuget push 'artifacts/*.nupkg' -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/SeanLatimer/index.json --skip-duplicate --no-symbols
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NUGETORG_TOKEN: ${{ secrets.NUGETORG_TOKEN }}
