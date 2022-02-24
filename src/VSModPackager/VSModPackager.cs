@@ -40,13 +40,20 @@ public class VsModPackager : Task
     public string OutputPath { get; set; } = null!;
 
     /// <summary>
+    ///     Defaults to $(BaseOutputPath)$(Configuration)
+    /// </summary>
+    [Required]
+    public string ZipOutputPath { get; set; } = null!;
+
+    /// <summary>
     ///     This can be either "auto", "json", or "yaml"
     /// </summary>
     public string ModInfoType { get; set; } = "auto";
 
     public string? Version { get; set; }
 
-    public bool MakeZip { get; set; }
+    public string? ZipName { get; set; }
+
     public bool VersionZipName { get; set; } = true;
 
     public string? Exclude { get; set; }
@@ -84,6 +91,12 @@ public class VsModPackager : Task
     {
         ProjectDir = NormalisePath(ProjectDir);
         OutputPath = NormalisePath(OutputPath);
+        ZipOutputPath = NormalisePath(ZipOutputPath);
+
+        if (string.IsNullOrWhiteSpace(ZipName))
+        {
+            ZipName = AssemblyName;
+        }
 
         var modInfo = LoadModInfo();
         if (modInfo == null)
@@ -106,7 +119,7 @@ public class VsModPackager : Task
 
         SaveModInfo(modInfo);
 
-        return !MakeZip || CreateZip();
+        return CreateZip();
     }
 
     private FileVersionInfo LoadAssemblyVersion()
@@ -133,12 +146,6 @@ public class VsModPackager : Task
 
     public bool CreateZip()
     {
-        var zipOutput = Path.Combine(OutputPath, AssemblyName);
-        if (Directory.Exists(zipOutput))
-        {
-            Directory.Delete(zipOutput, true);
-        }
-
         var includeLen = IncludeFiles.Value.Count;
         var excludeLen = ExcludeFiles.Value.Count;
         if (includeLen > 0 && excludeLen > 0)
@@ -175,22 +182,25 @@ public class VsModPackager : Task
             }
         }
 
-        _ = Directory.CreateDirectory(zipOutput);
-        File.Copy(
-            Path.Combine(OutputPath, "modinfo.json"),
-            Path.Combine(zipOutput, "modinfo.json")
-        );
+        _ = Directory.CreateDirectory(ZipOutputPath);
 
-        var sb = new StringBuilder($"{AssemblyName}");
+        var sb = new StringBuilder($"{ZipName}");
         if (VersionZipName)
         {
             _ = sb.Append('-').Append(Version);
         }
 
         _ = sb.Append(".zip");
+
+        var zipDest = Path.Combine(ZipOutputPath, sb.ToString());
+        if (File.Exists(zipDest))
+        {
+            File.Delete(zipDest);
+        }
+
         File.Move(
             zipPath,
-            Path.Combine(zipOutput, sb.ToString())
+            zipDest
         );
 
         return true;

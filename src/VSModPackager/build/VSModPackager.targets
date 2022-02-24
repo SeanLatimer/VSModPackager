@@ -10,7 +10,7 @@
           Condition="'$(Configuration)' == 'Release' and !Exists('$(PackagerTargetFile)')">
     <VSModPackager ProjectDir="$(ProjectDir)"
                    OutputPath="$(OutputPath)"
-                   AssemblyName="$(AssemblyName)"
-                   MakeZip="true"/>
+                   ZipOutputPath="$(BaseOutputPath)$(Configuration)"
+                   AssemblyName="$(AssemblyName)"/>
   </Target>
 </Project>

@@ -12,6 +12,7 @@
     <PackageProjectUrl>https://github.com/seanlatimer/VSModPackager</PackageProjectUrl>
     <RepositoryUrl>https://github.com/seanlatimer/VSModPackager</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DevelopmentDependency>true</DevelopmentDependency>
     <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -47,6 +48,8 @@
     <Content Include="buildMultiTargeting\VSModPackager.props">
       <PackagePath>buildMultiTargeting\</PackagePath>
     </Content>
+
+    <None Include="../../README.md" Visible="false" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
