@@ -2,7 +2,7 @@
 
 public enum ModInfoKind
 {
-    Auto,
-    Yaml,
-    Json
+    Auto = 0,
+    Yaml = 1,
+    Json = 2
 }

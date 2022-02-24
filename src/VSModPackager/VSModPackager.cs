@@ -202,9 +202,9 @@ public class VSModPackager : Task
         // ReSharper disable once IdentifierTypo
         var exts = RealModInfoType switch
         {
-            ModInfoKind.Auto => new[] { "json", "yaml" },
+            ModInfoKind.Auto => new[] { "json", "yaml", "yml" },
             ModInfoKind.Json => new[] { "json" },
-            ModInfoKind.Yaml => new[] { "yaml" },
+            ModInfoKind.Yaml => new[] { "yaml", "yml" },
             _ => throw new ArgumentOutOfRangeException(nameof(RealModInfoType),
                 $"extension doesn't exist for {RealModInfoType}")
         };

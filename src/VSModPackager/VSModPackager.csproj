@@ -13,7 +13,8 @@
     <RepositoryUrl>https://github.com/seanlatimer/VSModPackager</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -23,7 +24,7 @@
     <TargetFrameworks>netstandard2.0;net472</TargetFrameworks>
     <Nullable>enable</Nullable>
     <LangVersion>10</LangVersion>
-    <OutputPath>$(SolutionDir)artifacts</OutputPath>
+
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <InvariantGlobalization>true</InvariantGlobalization>
@@ -67,13 +68,22 @@
     <Reference Include="System.IO.Compression" Condition="'$(TargetFramework)' == 'net472'"/>
   </ItemGroup>
 
-  <Target Name="PackTaskDependencies" BeforeTargets="GenerateNuspec">
-    <ItemGroup>
-      <_PackageFiles Include="bin\$(Configuration)\*\Newtonsoft.Json.dll;bin\$(Configuration)\*\YamlDotNet.dll">
-        <PackagePath>tasks\%(RecursiveDir)</PackagePath>
-        <Visible>false</Visible>
-        <BuildAction>Content</BuildAction>
-      </_PackageFiles>
-    </ItemGroup>
+<!--  <Target Name="PackTaskDependencies" BeforeTargets="GenerateNuspec">-->
+<!--    <ItemGroup>-->
+<!--      <_PackageFiles Include="bin\$(Configuration)\*\Newtonsoft.Json.dll;bin\$(Configuration)\*\YamlDotNet.dll">-->
+<!--        <PackagePath>tasks\%(RecursiveDir)</PackagePath>-->
+<!--        <Visible>false</Visible>-->
+<!--        <BuildAction>Content</BuildAction>-->
+<!--      </_PackageFiles>-->
+<!--    </ItemGroup>-->
+<!--  </Target>-->
+  <Target Name="PackTaskDependencies" BeforeTargets="_GetPackageFiles">
+        <ItemGroup>
+          <_PackageFiles Include="bin\$(Configuration)\*\Newtonsoft.Json.dll;bin\$(Configuration)\*\YamlDotNet.dll">
+            <PackagePath>tasks\%(RecursiveDir)</PackagePath>
+            <Visible>false</Visible>
+            <BuildAction>Content</BuildAction>
+          </_PackageFiles>
+        </ItemGroup>
   </Target>
 </Project>

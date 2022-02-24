@@ -1,0 +1,78 @@
+﻿name: CD
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.github/pull_request_template.md'
+jobs:
+  build:
+    name: 'Build'
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            6.0.x
+            4.7.2
+
+      - name: Setup Verlite
+        run: |
+          dotnet tool install --global Verlite.CLI --version "2.1.0"
+          verlite . --auto-fetch --verbosity verbatim
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Pack
+        run: dotnet pack -o artifacts --configuration Release --no-restore
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifacts
+          path: |
+            artifacts/*
+  publish:
+    name: 'Publish'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: '0'
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            6.0.x
+
+      - name: Setup NuGet
+        run: |
+          dotnet nuget update source github --store-password-in-clear-text --username SeanLatimer --password ${{ secrets.GITHUB_TOKEN }}
+          dotnet nuget enable source github
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+
+      - name: Publish Nuget GitHub
+        run: dotnet nuget push 'artifacts/*.nupkg' -k ${GITHUB_TOKEN} -s github --skip-duplicate
+          --no-symbols 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -56,14 +56,14 @@ public class ModInfo
 
 public enum ModType
 {
-    Theme,
-    Content,
-    Code
+    Theme = 0,
+    Content = 1,
+    Code = 2
 }
 
 public enum Side
 {
-    Universal,
-    Client,
-    Server
+    Universal = 0,
+    Client = 1,
+    Server = 2
 }
