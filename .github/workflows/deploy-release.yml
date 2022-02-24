@@ -45,11 +45,8 @@ jobs:
  
       - name: Publish Nuget
         run: |
-          dotnet nuget push "artifacts\*.nupkg" -k ${NUGETORG_TOKEN} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
-          dotnet nuget push "artifacts\*.nupkg" -k ${GITHUB_TOKEN} -s https://nuget.pkg.github.com/SeanLatimer/index.json --skip-duplicate --no-symbols
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PKG_TOKEN }}
-          NUGETORG_TOKEN: ${{ secrets.NUGETORG_TOKEN }}
+          dotnet nuget push "artifacts\*.nupkg" -k ${{ secrets.NUGETORG_TOKEN }} -s https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
+          dotnet nuget push "artifacts\*.nupkg" -k ${{ secrets.GITHUB_TOKEN }} -s github --skip-duplicate --no-symbols
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
